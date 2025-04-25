@@ -307,7 +307,7 @@
             font-size: 0.875rem;
         }
         
-        @media (max-width: 768px) {
+    @media (max-width: 768px) {
             .ideas-container {
                 grid-template-columns: 1fr;
             }
@@ -326,7 +326,48 @@
                 flex-grow: 1;
             }
         }
-    </style>
+    /* Delete confirmation modal styles */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        max-width: 400px;
+        width: 90%;
+    }
+
+    .modal-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .btn-confirm-delete {
+        background-color: var(--warning);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-confirm-delete:hover {
+        opacity: 0.9;
+    }
+</style>
 </head>
 <body>
     <header>
@@ -397,12 +438,23 @@
         
         <div class="ideas-container"></div>
     </div>
-    
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal">
+      <div class="modal-content">
+        <p>Are you sure you want to delete this idea?</p>
+        <div class="modal-buttons">
+          <button id="cancel-delete-btn" class="btn">Cancel</button>
+          <button id="confirm-delete-btn" class="btn-confirm-delete">Delete</button>
+        </div>
+      </div>
+    </div>
+
     <script type="module">
         // Import the functions from the SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-        import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, arrayUnion, orderBy, getDocs, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, arrayUnion, orderBy, getDocs, runTransaction, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -631,6 +683,48 @@
                     }
                 }
             });
+
+            // Delete button functionality
+            const deleteModal = document.getElementById('delete-modal');
+            const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+            const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+            let selectedDeleteIdeaId = null;
+            let selectedDeleteCardElement = null;
+
+            // Handle delete button click on idea cards
+            document.addEventListener('click', function(e) {
+                const deleteBtn = e.target.closest('.btn-delete');
+                if (deleteBtn) {
+                    const ideaCard = deleteBtn.closest('.idea-card');
+                    selectedDeleteIdeaId = ideaCard.getAttribute('data-id');
+                    selectedDeleteCardElement = ideaCard;
+                    deleteModal.style.display = 'flex';
+                }
+            });
+
+            // Cancel delete action
+            cancelDeleteBtn.addEventListener('click', function() {
+                deleteModal.style.display = 'none';
+                selectedDeleteIdeaId = null;
+                selectedDeleteCardElement = null;
+            });
+
+            // Confirm delete action
+            confirmDeleteBtn.addEventListener('click', async function() {
+                if (!selectedDeleteIdeaId) return;
+                const ideaRef = doc(db, 'ideas', selectedDeleteIdeaId);
+                try {
+                    await deleteDoc(ideaRef);
+                    selectedDeleteCardElement.remove();
+                } catch (error) {
+                    console.error("Error deleting idea: ", error);
+                    alert("Error deleting idea: " + error.message);
+                }
+                deleteModal.style.display = 'none';
+                selectedDeleteIdeaId = null;
+                selectedDeleteCardElement = null;
+            });
+
         });
         
         // Function to load ideas from Firestore
@@ -757,6 +851,7 @@
                                 <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
                             </svg>
                         </button>
+                        <button class="btn btn-delete" title="Delete Idea">🗑️</button>
                     </div>
                 </div>
                 <div class="comment-section"></div>

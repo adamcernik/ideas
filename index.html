@@ -207,6 +207,11 @@
             font-size: 0.875rem;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
+        /* Generic checked tag styling for all tags */
+        .tag-checkbox:checked + .tag-label {
+            background-color: var(--primary);
+            color: white;
+        }
         
         .tag-checkbox:checked + .tag-label.tech {
             background-color: var(--info);

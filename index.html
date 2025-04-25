@@ -566,12 +566,18 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                     } else {
                         userPhoto.style.display = 'none';
                     }
+                    
+                    // Refresh author dropdown when user logs in
+                    loadUsers();
                 } else {
                     loginBtn.style.display = 'inline-block';
                     logoutBtn.style.display = 'none';
                     userInfo.textContent = '';
                     userPhoto.style.display = 'none';
                     userPhoto.src = '';
+                    
+                    // Refresh author dropdown when user logs out
+                    loadUsers();
                 }
             });
             loginBtn.addEventListener('click', () => {
@@ -748,8 +754,6 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                             <div class="form-group">
                                 <select required>
                                     <option value="">Select author</option>
-                                    <option value="UX Designer">UX Designer</option>
-                                    <option value="Product Manager">Product Manager (Marek)</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -760,6 +764,21 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                         
                         commentSection.appendChild(commentForm);
                         
+                        // Populate the author select in comment form
+                        const commentAuthorSelect = commentForm.querySelector('select');
+                        
+                        // Copy options from the main author select
+                        const mainAuthorSelect = document.getElementById('author');
+                        Array.from(mainAuthorSelect.options).forEach(option => {
+                            const newOption = document.createElement('option');
+                            newOption.value = option.value;
+                            newOption.textContent = option.textContent;
+                            if (option.dataset.photoUrl) {
+                                newOption.dataset.photoUrl = option.dataset.photoUrl;
+                            }
+                            commentAuthorSelect.appendChild(newOption);
+                        });
+                        
                         // Submit comment logic
                         commentForm.addEventListener('submit', function(e) {
                             e.preventDefault();
@@ -767,9 +786,21 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                             const author = this.querySelector('select').value;
                             const text = this.querySelector('textarea').value;
                             
+                            if (!author) {
+                                alert('Please select an author.');
+                                return;
+                            }
+                            
+                            // Get the selected option to access author details
+                            const selectedOption = this.querySelector('select').options[this.querySelector('select').selectedIndex];
+                            const authorName = selectedOption.textContent;
+                            const authorPhotoURL = selectedOption.dataset.photoUrl || '';
+                            
                             // Create comment object
                             const comment = {
-                                author: author,
+                                authorUid: author,
+                                author: authorName,
+                                authorPhotoURL: authorPhotoURL,
                                 text: text,
                                 date: new Date()
                             };
@@ -857,7 +888,8 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                 const ideasQuery = await getDocs(collection(db, 'ideas'));
                 
                 if (ideasQuery.empty) {
-                    // No ideas exist yet
+                    // No ideas exist yet, load sample ideas
+                    loadSampleIdeas();
                     return;
                 }
                 
@@ -867,7 +899,8 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                 });
             } catch (error) {
                 console.error("Error loading ideas: ", error);
-                // Failed to load ideas
+                // Failed to load ideas, fallback to sample ideas
+                loadSampleIdeas();
             }
         }
         
@@ -1002,11 +1035,92 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
         function createCommentElement(comment) {
             const commentElement = document.createElement('div');
             commentElement.className = 'comment';
+            
+            // Handle author photo if available
+            const authorPhoto = comment.authorPhotoURL || '';
+            const authorPhotoHTML = authorPhoto
+                ? `<img src="${authorPhoto}" class="author-photo-small" alt="${comment.author}">`
+                : '';
+            
             commentElement.innerHTML = `
-                <div class="comment-author">${comment.author}</div>
+                <div class="comment-author">${authorPhotoHTML}${comment.author}</div>
                 <p class="comment-text">${comment.text}</p>
             `;
             return commentElement;
+        }
+        
+        // Function to load registered users for author dropdown
+        async function loadUsers() {
+            const authorSelect = document.getElementById('author');
+            
+            try {
+                // Try to get users from Firestore (if you have a 'users' collection)
+                const usersQuery = await getDocs(collection(db, 'users'));
+                
+                // If no users are in the database, add default options
+                if (usersQuery.empty) {
+                    // Add default options
+                    authorSelect.innerHTML = `
+                        <option value="">Select author</option>
+                        <option value="guest-ux" data-photo-url="">UX Designer</option>
+                        <option value="guest-pm" data-photo-url="">Product Manager (Marek)</option>
+                    `;
+                } else {
+                    // Clear current options except the first "Select author" option
+                    authorSelect.innerHTML = '<option value="">Select author</option>';
+                    
+                    // Add options from database
+                    usersQuery.forEach(doc => {
+                        const userData = doc.data();
+                        const option = document.createElement('option');
+                        option.value = doc.id; // Use document ID as value
+                        option.textContent = userData.displayName || userData.email || 'Anonymous User';
+                        
+                        // Add photo URL as data attribute if available
+                        if (userData.photoURL) {
+                            option.dataset.photoUrl = userData.photoURL;
+                        }
+                        
+                        authorSelect.appendChild(option);
+                    });
+                }
+                
+                // Also add currently logged in user if available
+                const user = auth.currentUser;
+                if (user) {
+                    // Check if the user is already in the dropdown
+                    let userExists = false;
+                    for (let i = 0; i < authorSelect.options.length; i++) {
+                        if (authorSelect.options[i].value === user.uid) {
+                            userExists = true;
+                            break;
+                        }
+                    }
+                    
+                    // If not found, add the user
+                    if (!userExists) {
+                        const option = document.createElement('option');
+                        option.value = user.uid;
+                        option.textContent = user.displayName || user.email || 'Current User';
+                        
+                        // Add photo URL as data attribute if available
+                        if (user.photoURL) {
+                            option.dataset.photoUrl = user.photoURL;
+                        }
+                        
+                        authorSelect.appendChild(option);
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading users: ", error);
+                
+                // Fall back to default options in case of error
+                authorSelect.innerHTML = `
+                    <option value="">Select author</option>
+                    <option value="guest-ux" data-photo-url="">UX Designer</option>
+                    <option value="guest-pm" data-photo-url="">Product Manager (Marek)</option>
+                `;
+            }
         }
     </script>
 </body>

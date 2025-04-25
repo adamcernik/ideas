@@ -414,17 +414,19 @@
     <header>
         <h1>Idea Exchange Platform</h1>
         <p>Share and collaborate on business ideas between UX Designer and Product Manager</p>
-    <div class="auth-buttons">
-        <button id="login-btn" class="btn" title="Sign in">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3z"/>
-                <path fill-rule="evenodd" d="M8 8a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
-            </svg>
-        </button>
-        <button id="logout-btn" class="btn" style="display:none;">Sign out</button>
-        <img id="user-photo" class="user-photo" alt="Profile Photo" />
-        <span id="user-info" class="user-info"></span>
-    </div>
+        <div class="auth-buttons">
+            <button id="login-btn" class="btn" title="Sign in">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3z"/>
+                    <path fill-rule="evenodd" d="M8 8a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                </svg>
+            </button>
+            <img id="user-photo" class="user-photo" alt="Profile Photo" />
+            <div class="user-details">
+                <span id="user-info" class="user-info"></span>
+                <button id="logout-btn" class="sign-out-btn" style="display:none;">Sign out</button>
+            </div>
+        </div>
     </header>
     
     <div class="container">
@@ -435,8 +437,6 @@
                     <label for="author">Author</label>
                     <select id="author" name="author" required>
                         <option value="">Select author</option>
-                        <option value="UX Designer">UX Designer</option>
-                        <option value="Product Manager">Product Manager (Marek)</option>
                     </select>
                 </div>
                 
@@ -506,7 +506,7 @@
         // Import the functions from the SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-    import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, arrayUnion, orderBy, getDocs, runTransaction, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, arrayUnion, orderBy, getDocs, runTransaction, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
         // Your web app's Firebase configuration
@@ -532,6 +532,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Load ideas from Firestore
             loadIdeas();
+            // Load registered users for author dropdown
+            loadUsers();
             // Initialize Authentication UI
             const loginBtn = document.getElementById('login-btn');
             const logoutBtn = document.getElementById('logout-btn');
@@ -575,20 +577,30 @@
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // Get form values
-                const author = document.getElementById('author').value;
+                // Get form values and selected author details
+                const authorSelect = document.getElementById('author');
+                const authorUid = authorSelect.value;
+                if (!authorUid) {
+                    alert('Please select an author.');
+                    return;
+                }
+                const selectedOption = authorSelect.options[authorSelect.selectedIndex];
+                const authorName = selectedOption.textContent;
+                const authorPhotoURL = selectedOption.dataset.photoUrl || '';
                 const title = document.getElementById('title').value;
                 const description = document.getElementById('description').value;
-                
+
                 // Get selected tags
                 const tags = [];
                 document.querySelectorAll('input[name="tags"]:checked').forEach(tag => {
                     tags.push(tag.value);
                 });
-                
+
                 // Create idea object
                 const idea = {
-                    author: author,
+                    authorUid: authorUid,
+                    authorName: authorName,
+                    authorPhotoURL: authorPhotoURL,
                     title: title,
                     description: description,
                     tags: tags,
@@ -910,6 +922,12 @@
             // Format date
             const date = idea.date.toDate ? idea.date.toDate() : new Date(idea.date);
             const formattedDate = `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
+            // Determine author display (first name) and photo
+            const authorName = idea.authorName || idea.author;
+            const authorPhoto = idea.authorPhotoURL || '';
+            const authorPhotoHTML = authorPhoto
+                ? `<img src="${authorPhoto}" class="author-photo-small" alt="${authorName}">`
+                : '';
             
             // Create tags HTML
             let tagsHTML = '';
@@ -921,7 +939,9 @@
             // Set card HTML
             ideaCard.innerHTML = `
                 <div class="idea-header">
-                    <span class="idea-author">${idea.author}</span>
+                    <div class="idea-author">
+                        ${authorPhotoHTML}${authorName}
+                    </div>
                     <span class="idea-date">${formattedDate}</span>
                 </div>
                 <h3 class="idea-title">${idea.title}</h3>

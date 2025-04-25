@@ -386,6 +386,15 @@
         color: white;
         font-size: 0.9rem;
     }
+    /* User profile photo in auth buttons */
+    .user-photo {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: none;
+        margin-left: 0.5rem;
+    }
     .auth-buttons .btn {
         color: white;
         background: transparent;
@@ -413,6 +422,7 @@
             </svg>
         </button>
         <button id="logout-btn" class="btn" style="display:none;">Sign out</button>
+        <img id="user-photo" class="user-photo" alt="Profile Photo" />
         <span id="user-info" class="user-info"></span>
     </div>
     </header>
@@ -526,15 +536,24 @@
             const loginBtn = document.getElementById('login-btn');
             const logoutBtn = document.getElementById('logout-btn');
             const userInfo = document.getElementById('user-info');
+            const userPhoto = document.getElementById('user-photo');
             onAuthStateChanged(auth, user => {
                 if (user) {
                     loginBtn.style.display = 'none';
                     logoutBtn.style.display = 'inline-block';
                     userInfo.textContent = user.displayName || user.email;
+                    if (user.photoURL) {
+                        userPhoto.src = user.photoURL;
+                        userPhoto.style.display = 'block';
+                    } else {
+                        userPhoto.style.display = 'none';
+                    }
                 } else {
                     loginBtn.style.display = 'inline-block';
                     logoutBtn.style.display = 'none';
                     userInfo.textContent = '';
+                    userPhoto.style.display = 'none';
+                    userPhoto.src = '';
                 }
             });
             loginBtn.addEventListener('click', () => {

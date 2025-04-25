@@ -372,12 +372,30 @@
     .btn-confirm-delete:hover {
         opacity: 0.9;
     }
+    /* Authentication button styles */
+    .auth-buttons {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    .user-info {
+        color: white;
+        font-size: 0.9rem;
+    }
 </style>
 </head>
 <body>
     <header>
         <h1>Idea Exchange Platform</h1>
         <p>Share and collaborate on business ideas between UX Designer and Product Manager</p>
+        <div class="auth-buttons">
+            <button id="login-btn" class="btn">Sign in with Google</button>
+            <button id="logout-btn" class="btn" style="display:none;">Sign out</button>
+            <span id="user-info" class="user-info"></span>
+        </div>
     </header>
     
     <div class="container">
@@ -459,7 +477,8 @@
         // Import the functions from the SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-        import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, arrayUnion, orderBy, getDocs, runTransaction, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, arrayUnion, orderBy, getDocs, runTransaction, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -477,10 +496,39 @@
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getFirestore(app);
+        // Initialize Firebase Authentication and provider
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
         
         document.addEventListener('DOMContentLoaded', function() {
             // Load ideas from Firestore
             loadIdeas();
+            // Initialize Authentication UI
+            const loginBtn = document.getElementById('login-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const userInfo = document.getElementById('user-info');
+            onAuthStateChanged(auth, user => {
+                if (user) {
+                    loginBtn.style.display = 'none';
+                    logoutBtn.style.display = 'inline-block';
+                    userInfo.textContent = user.displayName || user.email;
+                } else {
+                    loginBtn.style.display = 'inline-block';
+                    logoutBtn.style.display = 'none';
+                    userInfo.textContent = '';
+                }
+            });
+            loginBtn.addEventListener('click', () => {
+                signInWithPopup(auth, provider).catch(error => {
+                    console.error("Error during sign in:", error);
+                    alert("Sign in failed: " + error.message);
+                });
+            });
+            logoutBtn.addEventListener('click', () => {
+                signOut(auth).catch(error => {
+                    console.error("Error during sign out:", error);
+                });
+            });
             
             // Submit form logic
             const form = document.getElementById('idea-form');

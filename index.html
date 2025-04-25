@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idea Exchange - UX Designer & Product Manager</title>
+    <!-- Firebase SDK - Using ES modules -->
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --info: #4895ef;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f7fa;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .ideas-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .idea-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .idea-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        
+        .idea-author {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .idea-date {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        
+        .idea-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .idea-description {
+            color: #495057;
+            margin-bottom: 1rem;
+        }
+        
+        .idea-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .tag {
+            background-color: #e9ecef;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .tag.tech {
+            background-color: var(--info);
+            color: white;
+        }
+        
+        .tag.sport {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .tag.ux {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            color: #6c757d;
+            transition: color 0.2s ease;
+        }
+        
+        .btn:hover {
+            color: var(--primary);
+        }
+        
+        .btn-like {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .form-title {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        
+        .tag-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .tag-checkbox {
+            display: none;
+        }
+        
+        .tag-label {
+            padding: 0.5rem 1rem;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        
+        .tag-checkbox:checked + .tag-label.tech {
+            background-color: var(--info);
+            color: white;
+        }
+        
+        .tag-checkbox:checked + .tag-label.sport {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .tag-checkbox:checked + .tag-label.ux {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .submit-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .submit-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-btn {
+            background-color: transparent;
+            border: 1px solid #ced4da;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .filter-btn:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .search-input {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .search-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .comment-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .comment {
+            padding: 0.75rem;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comment-author {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .comment-text {
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 768px) {
+            .ideas-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .search-input {
+                flex-grow: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Idea Exchange Platform</h1>
+        <p>Share and collaborate on business ideas between UX Designer and Product Manager</p>
+    </header>
+    
+    <div class="container">
+        <div class="form-container">
+            <h2 class="form-title">Submit New Idea</h2>
+            <form id="idea-form">
+                <div class="form-group">
+                    <label for="author">Author</label>
+                    <select id="author" name="author" required>
+                        <option value="">Select author</option>
+                        <option value="UX Designer">UX Designer</option>
+                        <option value="Product Manager">Product Manager (Marek)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="title">Idea Title</label>
+                    <input type="text" id="title" name="title" placeholder="Short and descriptive title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Describe your idea in detail..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tags</label>
+                    <div class="tag-selector">
+                        <input type="checkbox" id="tag-tech" class="tag-checkbox" name="tags" value="tech">
+                        <label for="tag-tech" class="tag-label tech">Tech</label>
+                        
+                        <input type="checkbox" id="tag-sport" class="tag-checkbox" name="tags" value="sport">
+                        <label for="tag-sport" class="tag-label sport">Sport</label>
+                        
+                        <input type="checkbox" id="tag-ux" class="tag-checkbox" name="tags" value="ux">
+                        <label for="tag-ux" class="tag-label ux">UX/UI</label>
+                        
+                        <input type="checkbox" id="tag-saas" class="tag-checkbox" name="tags" value="saas">
+                        <label for="tag-saas" class="tag-label">SaaS</label>
+                        
+                        <input type="checkbox" id="tag-app" class="tag-checkbox" name="tags" value="app">
+                        <label for="tag-app" class="tag-label">Mobile App</label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit Idea</button>
+            </form>
+        </div>
+        
+        <div class="controls">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Ideas</button>
+                <button class="filter-btn" data-filter="tech">Tech</button>
+                <button class="filter-btn" data-filter="sport">Sport</button>
+                <button class="filter-btn" data-filter="ux">UX/UI</button>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search ideas...">
+                <button class="search-btn">Search</button>
+            </div>
+        </div>
+        
+        <div class="ideas-container">
+            <!-- Sample idea cards -->
+            <div class="idea-card" data-tags="tech ux">
+                <div class="idea-header">
+                    <span class="idea-author">UX Designer</span>
+                    <span class="idea-date">Apr 25, 2025</span>
+                </div>
+                <h3 class="idea-title">UX Toolkit for Developers</h3>
+                <p class="idea-description">A comprehensive toolkit that helps developers implement better UX practices in their projects. Features like component libraries, accessibility checkers, and user flow templates.</p>
+                <div class="idea-footer">
+                    <div class="tags">
+                        <span class="tag tech">Tech</span>
+                        <span class="tag ux">UX/UI</span>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-like">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                            </svg>
+                            <span>5</span>
+                        </button>
+                        <button class="btn btn-comment">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="comment-section">
+                    <div class="comment">
+                        <div class="comment-author">Product Manager (Marek)</div>
+                        <p class="comment-text">I love this! We could target both indie developers and small to mid-sized companies. Let's discuss market size and pricing models.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="idea-card" data-tags="sport tech">
+                <div class="idea-header">
+                    <span class="idea-author">Product Manager (Marek)</span>
+                    <span class="idea-date">Apr 24, 2025</span>
+                </div>
+                <h3 class="idea-title">Sports Training Analytics Platform</h3>
+                <p class="idea-description">A platform that uses computer vision to analyze sports techniques and provide personalized training recommendations. Could start with popular sports like tennis, golf, or basketball.</p>
+                <div class="idea-footer">
+                    <div class="tags">
+                        <span class="tag sport">Sport</span>
+                        <span class="tag tech">Tech</span>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-like">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                            </svg>
+                            <span>3</span>
+                        </button>
+                        <button class="btn btn-comment">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="comment-section">
+                    <div class="comment">
+                        <div class="comment-author">UX Designer</div>
+                        <p class="comment-text">This would be challenging but exciting! I think we could start with a simpler version focusing on one sport to validate the concept.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="idea-card" data-tags="saas ux">
+                <div class="idea-header">
+                    <span class="idea-author">UX Designer</span>
+                    <span class="idea-date">Apr 23, 2025</span>
+                </div>
+                <h3 class="idea-title">UX Research Repository as a Service</h3>
+                <p class="idea-description">A platform for teams to store, organize, and analyze UX research data. Features include automated insights, sharing capabilities, and integration with design tools.</p>
+                <div class="idea-footer">
+                    <div class="tags">
+                        <span class="tag">SaaS</span>
+                        <span class="tag ux">UX/UI</span>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-like">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                            </svg>
+                            <span>4</span>
+                        </button>
+                        <button class="btn btn-comment">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        // Import the functions from the SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, arrayUnion, orderBy, getDocs, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwlnt2b58Sr2BLC4X9OgMJqpc3xP-5C48",
+            authDomain: "ideas-8839a.firebaseapp.com",
+            projectId: "ideas-8839a",
+            // storageBucket should match your Firebase Storage default bucket
+            storageBucket: "ideas-8839a.appspot.com",
+            messagingSenderId: "703772235630",
+            appId: "1:703772235630:web:722080a2eaf15ee4fe937f",
+            measurementId: "G-F5GXR00HWS"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load ideas from Firestore
+            loadIdeas();
+            
+            // Submit form logic
+            const form = document.getElementById('idea-form');
+            const ideasContainer = document.querySelector('.ideas-container');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const author = document.getElementById('author').value;
+                const title = document.getElementById('title').value;
+                const description = document.getElementById('description').value;
+                
+                // Get selected tags
+                const tags = [];
+                document.querySelectorAll('input[name="tags"]:checked').forEach(tag => {
+                    tags.push(tag.value);
+                });
+                
+                // Create idea object
+                const idea = {
+                    author: author,
+                    title: title,
+                    description: description,
+                    tags: tags,
+                    likes: 0,
+                    date: new Date(),
+                    comments: []
+                };
+                
+                // Save to Firestore
+                addDoc(collection(db, 'ideas'), idea)
+                    .then(docRef => {
+                        // Create new idea card with the document ID
+                        createIdeaCard(docRef.id, idea);
+                        
+                        // Reset form
+                        form.reset();
+                    })
+                    .catch(error => {
+                        console.error("Error adding document: ", error);
+                        alert("Error adding idea: " + error.message);
+                    });
+            });
+            
+            // Filter buttons logic
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get filter value
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Filter ideas
+                    const ideas = document.querySelectorAll('.idea-card');
+                    
+                    ideas.forEach(idea => {
+                        if (filter === 'all') {
+                            idea.style.display = 'block';
+                        } else {
+                            const tags = idea.getAttribute('data-tags');
+                            if (tags && tags.includes(filter)) {
+                                idea.style.display = 'block';
+                            } else {
+                                idea.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Search functionality
+            const searchBtn = document.querySelector('.search-btn');
+            const searchInput = document.querySelector('.search-input');
+            
+            searchBtn.addEventListener('click', function() {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                if (searchTerm === '') {
+                    return;
+                }
+                
+                const ideas = document.querySelectorAll('.idea-card');
+                
+                ideas.forEach(idea => {
+                    const title = idea.querySelector('.idea-title').textContent.toLowerCase();
+                    const description = idea.querySelector('.idea-description').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        idea.style.display = 'block';
+                    } else {
+                        idea.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Like button functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.btn-like')) {
+                    const likeBtn = e.target.closest('.btn-like');
+                    const ideaCard = likeBtn.closest('.idea-card');
+                    const ideaId = ideaCard.getAttribute('data-id');
+                    const likeCount = likeBtn.querySelector('span');
+                    
+                    // Update in Firestore
+                    const ideaRef = doc(db, 'ideas', ideaId);
+                    
+                    // Use a transaction to ensure accurate likes count
+                    runTransaction(db, async (transaction) => {
+                        const ideaDoc = await transaction.get(ideaRef);
+                        if (!ideaDoc.exists()) {
+                            throw "Document does not exist!";
+                        }
+                        
+                        const newLikes = ideaDoc.data().likes + 1;
+                        transaction.update(ideaRef, { likes: newLikes });
+                        return newLikes;
+                    }).then(newLikes => {
+                        // Update UI
+                        likeCount.textContent = newLikes;
+                        
+                        // Visual feedback
+                        likeBtn.style.color = '#f72585';
+                        setTimeout(() => {
+                            likeBtn.style.color = '';
+                        }, 500);
+                    }).catch(error => {
+                        console.error("Error updating likes: ", error);
+                    });
+                }
+            });
+            
+            // Comment button functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.btn-comment')) {
+                    const ideaCard = e.target.closest('.idea-card');
+                    const ideaId = ideaCard.getAttribute('data-id');
+                    const commentSection = ideaCard.querySelector('.comment-section');
+                    
+                    // Create comment form if it doesn't exist
+                    if (!commentSection.querySelector('.comment-form')) {
+                        const commentForm = document.createElement('form');
+                        commentForm.className = 'comment-form';
+                        commentForm.innerHTML = `
+                            <div class="form-group">
+                                <select required>
+                                    <option value="">Select author</option>
+                                    <option value="UX Designer">UX Designer</option>
+                                    <option value="Product Manager">Product Manager (Marek)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <textarea placeholder="Add your comment..." rows="2" required></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">Add Comment</button>
+                        `;
+                        
+                        commentSection.appendChild(commentForm);
+                        
+                        // Submit comment logic
+                        commentForm.addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            
+                            const author = this.querySelector('select').value;
+                            const text = this.querySelector('textarea').value;
+                            
+                            // Create comment object
+                            const comment = {
+                                author: author,
+                                text: text,
+                                date: new Date()
+                            };
+                            
+                            // Add to Firestore
+                            const ideaRef = doc(db, 'ideas', ideaId);
+                            
+                            updateDoc(ideaRef, {
+                                comments: arrayUnion(comment)
+                            }).then(() => {
+                                // Create comment element
+                                const commentElement = createCommentElement(comment);
+                                
+                                // Add before form
+                                commentSection.insertBefore(commentElement, commentForm);
+                                
+                                // Reset form
+                                commentForm.reset();
+                                
+                                // Visual feedback
+                                commentElement.style.backgroundColor = '#f0f7ff';
+                                setTimeout(() => {
+                                    commentElement.style.backgroundColor = '';
+                                }, 1000);
+                            }).catch(error => {
+                                console.error("Error adding comment: ", error);
+                                alert("Error adding comment: " + error.message);
+                            });
+                        });
+                    }
+                }
+            });
+        });
+        
+        // Function to load ideas from Firestore
+        async function loadIdeas() {
+            const ideasContainer = document.querySelector('.ideas-container');
+            
+            // Clear existing ideas
+            ideasContainer.innerHTML = '';
+            
+            try {
+                const ideasQuery = await getDocs(collection(db, 'ideas'));
+                
+                if (ideasQuery.empty) {
+                    // If no ideas exist, load sample ideas
+                    loadSampleIdeas();
+                    return;
+                }
+                
+                ideasQuery.forEach(doc => {
+                    const ideaData = doc.data();
+                    createIdeaCard(doc.id, ideaData);
+                });
+            } catch (error) {
+                console.error("Error loading ideas: ", error);
+                // If error, load sample ideas
+                loadSampleIdeas();
+            }
+        }
+        
+        // Function to load sample ideas if no real data exists
+        function loadSampleIdeas() {
+            const ideasContainer = document.querySelector('.ideas-container');
+            
+            // Sample ideas
+            const sampleIdeas = [
+                {
+                    id: 'sample1',
+                    author: 'UX Designer',
+                    title: 'UX Toolkit for Developers',
+                    description: 'A comprehensive toolkit that helps developers implement better UX practices in their projects. Features like component libraries, accessibility checkers, and user flow templates.',
+                    tags: ['tech', 'ux'],
+                    likes: 5,
+                    date: new Date('2025-04-25'),
+                    comments: [
+                        {
+                            author: 'Product Manager (Marek)',
+                            text: 'I love this! We could target both indie developers and small to mid-sized companies. Let\'s discuss market size and pricing models.'
+                        }
+                    ]
+                },
+                {
+                    id: 'sample2',
+                    author: 'Product Manager (Marek)',
+                    title: 'Sports Training Analytics Platform',
+                    description: 'A platform that uses computer vision to analyze sports techniques and provide personalized training recommendations. Could start with popular sports like tennis, golf, or basketball.',
+                    tags: ['sport', 'tech'],
+                    likes: 3,
+                    date: new Date('2025-04-24'),
+                    comments: [
+                        {
+                            author: 'UX Designer',
+                            text: 'This would be challenging but exciting! I think we could start with a simpler version focusing on one sport to validate the concept.'
+                        }
+                    ]
+                },
+                {
+                    id: 'sample3',
+                    author: 'UX Designer',
+                    title: 'UX Research Repository as a Service',
+                    description: 'A platform for teams to store, organize, and analyze UX research data. Features include automated insights, sharing capabilities, and integration with design tools.',
+                    tags: ['saas', 'ux'],
+                    likes: 4,
+                    date: new Date('2025-04-23'),
+                    comments: []
+                }
+            ];
+            
+            // Display sample ideas
+            sampleIdeas.forEach(idea => {
+                createIdeaCard(idea.id, idea);
+            });
+        }
+        
+        // Function to create an idea card
+        function createIdeaCard(id, idea) {
+            const ideasContainer = document.querySelector('.ideas-container');
+            
+            // Create new idea card
+            const ideaCard = document.createElement('div');
+            ideaCard.className = 'idea-card';
+            ideaCard.setAttribute('data-id', id);
+            ideaCard.setAttribute('data-tags', idea.tags.join(' '));
+            
+            // Format date
+            const date = idea.date.toDate ? idea.date.toDate() : new Date(idea.date);
+            const formattedDate = `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
+            
+            // Create tags HTML
+            let tagsHTML = '';
+            idea.tags.forEach(tag => {
+                const tagClass = ['tech', 'sport', 'ux'].includes(tag) ? tag : '';
+                tagsHTML += `<span class="tag ${tagClass}">${tag.charAt(0).toUpperCase() + tag.slice(1)}</span>`;
+            });
+            
+            // Set card HTML
+            ideaCard.innerHTML = `
+                <div class="idea-header">
+                    <span class="idea-author">${idea.author}</span>
+                    <span class="idea-date">${formattedDate}</span>
+                </div>
+                <h3 class="idea-title">${idea.title}</h3>
+                <p class="idea-description">${idea.description}</p>
+                <div class="idea-footer">
+                    <div class="tags">
+                        ${tagsHTML}
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-like">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                            </svg>
+                            <span>${idea.likes}</span>
+                        </button>
+                        <button class="btn btn-comment">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="comment-section"></div>
+            `;
+            
+            // Add comments
+            const commentSection = ideaCard.querySelector('.comment-section');
+            if (idea.comments && idea.comments.length > 0) {
+                idea.comments.forEach(comment => {
+                    commentSection.appendChild(createCommentElement(comment));
+                });
+            }
+            
+            // Add to container at the beginning
+            ideasContainer.insertBefore(ideaCard, ideasContainer.firstChild);
+            
+            return ideaCard;
+        }
+        
+        // Function to create a comment element
+        function createCommentElement(comment) {
+            const commentElement = document.createElement('div');
+            commentElement.className = 'comment';
+            commentElement.innerHTML = `
+                <div class="comment-author">${comment.author}</div>
+                <p class="comment-text">${comment.text}</p>
+            `;
+            return commentElement;
+        }
+    </script>
+</body>
+</html>

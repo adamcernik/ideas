@@ -30,6 +30,7 @@
         }
         
         header {
+            position: relative;
             background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
             padding: 2rem;
@@ -385,17 +386,35 @@
         color: white;
         font-size: 0.9rem;
     }
+    .auth-buttons .btn {
+        color: white;
+        background: transparent;
+        border: none;
+        font-size: 1.25rem;
+        padding: 0.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .auth-buttons .btn:hover {
+        opacity: 0.8;
+    }
 </style>
 </head>
 <body>
     <header>
         <h1>Idea Exchange Platform</h1>
         <p>Share and collaborate on business ideas between UX Designer and Product Manager</p>
-        <div class="auth-buttons">
-            <button id="login-btn" class="btn">Sign in with Google</button>
-            <button id="logout-btn" class="btn" style="display:none;">Sign out</button>
-            <span id="user-info" class="user-info"></span>
-        </div>
+    <div class="auth-buttons">
+        <button id="login-btn" class="btn" title="Sign in">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3z"/>
+                <path fill-rule="evenodd" d="M8 8a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+            </svg>
+        </button>
+        <button id="logout-btn" class="btn" style="display:none;">Sign out</button>
+        <span id="user-info" class="user-info"></span>
+    </div>
     </header>
     
     <div class="container">

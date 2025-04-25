@@ -644,8 +644,7 @@
                 const ideasQuery = await getDocs(collection(db, 'ideas'));
                 
                 if (ideasQuery.empty) {
-                    // If no ideas exist, load sample ideas
-                    loadSampleIdeas();
+                    // No ideas exist yet
                     return;
                 }
                 
@@ -655,8 +654,7 @@
                 });
             } catch (error) {
                 console.error("Error loading ideas: ", error);
-                // If error, load sample ideas
-                loadSampleIdeas();
+                // Failed to load ideas
             }
         }
         

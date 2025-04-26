@@ -826,6 +826,14 @@
             margin-top: 0.75rem;
             border-left: 2px solid #eee;
             padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .no-answers-msg {
+            color: #6c757d;
+            font-style: italic;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
         }
         
         .answer-item {
@@ -1711,7 +1719,13 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
             // Function to load answers for a question
             async function loadQuestionAnswers(questionId) {
                 try {
+                    console.log(`Loading answers for question ${questionId}`); // Debug
                     const answersContainer = document.getElementById('answers-' + questionId);
+                    
+                    if (!answersContainer) {
+                        console.error(`Container for answers-${questionId} not found`);
+                        return;
+                    }
                     
                     // Clear previous content
                     answersContainer.innerHTML = '';
@@ -1730,6 +1744,8 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                     
                     const querySnapshot = await getDocs(q);
                     let answersCount = 0;
+                    
+                    console.log(`Found ${querySnapshot.size} answers for question ${questionId}`); // Debug
                     
                     querySnapshot.forEach((doc) => {
                         answersCount++;
@@ -1789,6 +1805,9 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                         noAnswersMsg.textContent = 'No answers yet. Be the first to share your thoughts!';
                         answersContainer.appendChild(noAnswersMsg);
                     }
+                    
+                    // Make answers container visible
+                    answersContainer.style.display = 'block';
                     
                 } catch (error) {
                     console.error('Error loading answers:', error);
@@ -1864,6 +1883,11 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                     
                     // Load ideas from Firestore
                     loadIdeas();
+                    
+                    // Load question answers if motivation section is active
+                    if (document.getElementById('motivation-section').classList.contains('active')) {
+                        loadAllQuestionAnswers();
+                    }
                 } else {
                     // User is signed out
                     loginBtn.style.display = 'inline-block';
@@ -1882,6 +1906,7 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                     
                     // Close modal if open
                     ideaModal.classList.remove('active');
+                    document.getElementById('answer-modal').classList.remove('active');
                     
                     // Clear ideas when logged out
                     ideasContainer.innerHTML = '';
@@ -2187,6 +2212,39 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                 selectedDeleteCardElement = null;
             });
 
+            // Load all question answers on page load
+            function loadAllQuestionAnswers() {
+                // Only proceed if user is logged in
+                if (!auth.currentUser) return;
+                
+                // Get all question IDs
+                const questions = document.querySelectorAll('.answer-btn');
+                questions.forEach(question => {
+                    const questionId = question.getAttribute('data-question');
+                    loadQuestionAnswers(questionId);
+                });
+            }
+            
+            // Initialize question answers when motivation section is shown
+            document.addEventListener('click', function(e) {
+                const link = e.target.closest('.nav-menu a');
+                if (link && link.getAttribute('data-section') === 'motivation-section') {
+                    // Check if user is logged in before loading answers
+                    if (auth.currentUser) {
+                        loadAllQuestionAnswers();
+                    }
+                }
+            });
+            
+            // Also load answers when the page loads if hash is #motivation
+            if (window.location.hash === '#motivation') {
+                // Delay to ensure auth state is checked
+                setTimeout(() => {
+                    if (auth.currentUser) {
+                        loadAllQuestionAnswers();
+                    }
+                }, 1000);
+            }
         });
         
         // Function to load ideas from Firestore

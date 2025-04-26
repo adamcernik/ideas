@@ -66,14 +66,9 @@
             background-color: rgba(255, 255, 255, 0.2);
         }
         
-        /* Mobile menu button */
+        /* Mobile menu button - removing */
         .menu-toggle {
             display: none;
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
         }
         
         /* Page sections */
@@ -108,8 +103,10 @@
         }
         
         .question-list li {
+            position: relative;
             padding: 0.75rem 0;
             border-bottom: 1px solid #eee;
+            margin-bottom: 0.5rem;
         }
         
         .question-list li:last-child {
@@ -434,44 +431,20 @@
                 flex-grow: 1;
             }
             
-            /* Responsive navigation */
+            /* Simplified navigation for mobile */
             .nav-container {
-                position: relative;
-            }
-            
-            .menu-toggle {
-                display: block;
-                position: absolute;
-                right: 1rem;
-                top: -3rem;
-            }
-            
-            .nav-menu {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background-color: var(--secondary);
-                padding: 1rem;
-                gap: 0.5rem;
-                z-index: 100;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            }
-            
-            .nav-menu.show {
-                display: flex;
-            }
-            
-            .nav-menu li {
                 width: 100%;
             }
             
+            .nav-menu {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+            }
+            
             .nav-menu li a {
-                display: block;
-                padding: 0.75rem;
-                text-align: center;
+                padding: 0.5rem 0.75rem;
+                font-size: 1rem;
             }
         }
     /* Delete confirmation modal styles */
@@ -822,18 +795,158 @@
     .back-to-ideas:hover {
         text-decoration: underline;
     }
-</style>
+        
+        /* Motivation page answer styles */
+        .question-list li {
+            position: relative;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 0.5rem;
+        }
+        
+        .answer-btn {
+            padding: 0.3rem 0.7rem;
+            background-color: var(--light);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 0.5rem;
+        }
+        
+        .answer-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .question-answers {
+            margin-top: 0.75rem;
+            margin-left: 1.5rem;
+            padding-left: 1rem;
+            border-left: 2px solid #eee;
+            display: none;
+        }
+        
+        .question-answers.active {
+            display: block;
+        }
+        
+        .answer-form {
+            margin-bottom: 1rem;
+        }
+        
+        .answer-textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        
+        .answer-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+        
+        .answer-submit {
+            margin-top: 0.5rem;
+            padding: 0.3rem 0.7rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .answer-submit:hover {
+            background-color: var(--secondary);
+        }
+        
+        .answer-item {
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #f2f2f2;
+        }
+        
+        .answer-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .answer-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.3rem;
+        }
+        
+        .answer-photo {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0.5rem;
+        }
+        
+        .answer-author {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        
+        .answer-date {
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: #777;
+        }
+        
+        .answer-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--dark);
+        }
+        
+        .show-more-answers {
+            display: flex;
+            align-items: center;
+            padding: 0.3rem 0.7rem;
+            background-color: #f8f9fa;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 0.5rem;
+        }
+        
+        .show-more-answers:hover {
+            background-color: #e9ecef;
+        }
+        
+        .show-more-answers svg {
+            margin-left: 0.3rem;
+            transition: transform 0.2s ease;
+        }
+        
+        .show-more-answers.expanded svg {
+            transform: rotate(180deg);
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1>Idea Exchange Platform</h1>
         <p>Share and collaborate on business ideas between UX Designer and Product Manager</p>
         <div class="nav-container">
-            <button class="menu-toggle">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
-                </svg>
-            </button>
             <ul class="nav-menu">
                 <li><a href="#ideas" class="active" data-section="ideas-section">Ideas</a></li>
                 <li><a href="#motivation" data-section="motivation-section">Motivation</a></li>
@@ -887,40 +1000,200 @@
                 <div class="question-category">
                     <h3>Personal Alignment Questions</h3>
                     <ul class="question-list">
-                        <li>What problems do I genuinely care about solving?</li>
-                        <li>What unique skills, experiences, or insights do I have that others don't?</li>
-                        <li>What could I work on for years without losing interest?</li>
-                        <li>What areas do I have unfair advantages in (connections, expertise, resources)?</li>
+                        <li>
+                            What problems do I genuinely care about solving?
+                            <button class="answer-btn" data-question="personal1">Answer</button>
+                            <div class="question-answers" id="answers-personal1">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            What unique skills, experiences, or insights do I have that others don't?
+                            <button class="answer-btn" data-question="personal2">Answer</button>
+                            <div class="question-answers" id="answers-personal2">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            What could I work on for years without losing interest?
+                            <button class="answer-btn" data-question="personal3">Answer</button>
+                            <div class="question-answers" id="answers-personal3">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            What areas do I have unfair advantages in (connections, expertise, resources)?
+                            <button class="answer-btn" data-question="personal4">Answer</button>
+                            <div class="question-answers" id="answers-personal4">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 
                 <div class="question-category">
                     <h3>Market Reality Questions</h3>
                     <ul class="question-list">
-                        <li>What pain points exist that people or businesses would pay to solve?</li>
-                        <li>Where are people currently spending money but unhappy with solutions?</li>
-                        <li>What inefficient processes or systems could be dramatically improved?</li>
-                        <li>What emerging trends or technologies create new opportunities?</li>
+                        <li>
+                            What pain points exist that people or businesses would pay to solve?
+                            <button class="answer-btn" data-question="market1">Answer</button>
+                            <div class="question-answers" id="answers-market1">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            Where are people currently spending money but unhappy with solutions?
+                            <button class="answer-btn" data-question="market2">Answer</button>
+                            <div class="question-answers" id="answers-market2">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            What inefficient processes or systems could be dramatically improved?
+                            <button class="answer-btn" data-question="market3">Answer</button>
+                            <div class="question-answers" id="answers-market3">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            What emerging trends or technologies create new opportunities?
+                            <button class="answer-btn" data-question="market4">Answer</button>
+                            <div class="question-answers" id="answers-market4">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 
                 <div class="question-category">
                     <h3>Execution Questions</h3>
                     <ul class="question-list">
-                        <li>Can I build a minimum viable product (MVP) relatively quickly?</li>
-                        <li>Do I have access to early users who can provide feedback?</li>
-                        <li>What would sustainable unit economics look like?</li>
-                        <li>How could this idea scale?</li>
+                        <li>
+                            Can I build a minimum viable product (MVP) relatively quickly?
+                            <button class="answer-btn" data-question="execution1">Answer</button>
+                            <div class="question-answers" id="answers-execution1">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            Do I have access to early users who can provide feedback?
+                            <button class="answer-btn" data-question="execution2">Answer</button>
+                            <div class="question-answers" id="answers-execution2">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            What would sustainable unit economics look like?
+                            <button class="answer-btn" data-question="execution3">Answer</button>
+                            <div class="question-answers" id="answers-execution3">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            How could this idea scale?
+                            <button class="answer-btn" data-question="execution4">Answer</button>
+                            <div class="question-answers" id="answers-execution4">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 
                 <div class="question-category">
                     <h3>Differentiation Questions</h3>
                     <ul class="question-list">
-                        <li>Why hasn't this been solved effectively already?</li>
-                        <li>What's my unique insight about this market or problem?</li>
-                        <li>How defensible would this solution be against competitors?</li>
-                        <li>What would make customers choose this over alternatives?</li>
+                        <li>
+                            Why hasn't this been solved effectively already?
+                            <button class="answer-btn" data-question="diff1">Answer</button>
+                            <div class="question-answers" id="answers-diff1">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            What's my unique insight about this market or problem?
+                            <button class="answer-btn" data-question="diff2">Answer</button>
+                            <div class="question-answers" id="answers-diff2">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            How defensible would this solution be against competitors?
+                            <button class="answer-btn" data-question="diff3">Answer</button>
+                            <div class="question-answers" id="answers-diff3">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            What would make customers choose this over alternatives?
+                            <button class="answer-btn" data-question="diff4">Answer</button>
+                            <div class="question-answers" id="answers-diff4">
+                                <!-- Answers will be loaded here -->
+                                <div class="answer-form">
+                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
+                                    <button class="answer-submit">Submit</button>
+                                </div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -996,7 +1269,7 @@
         // Import the functions from the SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, arrayUnion, orderBy, getDocs, runTransaction, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, arrayUnion, orderBy, getDocs, runTransaction, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
         // Your web app's Firebase configuration
@@ -1061,15 +1334,8 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
             });
             
             // Navigation elements
-            const menuToggle = document.querySelector('.menu-toggle');
-            const navMenu = document.querySelector('.nav-menu');
             const navLinks = document.querySelectorAll('.nav-menu a');
             const pageSections = document.querySelectorAll('.page-section');
-            
-            // Menu toggle for mobile
-            menuToggle.addEventListener('click', function() {
-                navMenu.classList.toggle('show');
-            });
             
             // Navigation between sections
             navLinks.forEach(link => {
@@ -1086,9 +1352,6 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                         section.classList.remove('active');
                     });
                     document.getElementById(targetSection).classList.add('active');
-                    
-                    // Hide mobile menu after selection
-                    navMenu.classList.remove('show');
                     
                     // Update URL hash
                     window.location.hash = this.getAttribute('href');
@@ -1326,6 +1589,230 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                     loadIdeaDetail(ideaId);
                 }
             });
+            
+            // Handle question answer buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('answer-btn')) {
+                    const questionId = e.target.getAttribute('data-question');
+                    const answersSection = document.getElementById('answers-' + questionId);
+                    
+                    // Toggle answers section visibility
+                    if (answersSection.classList.contains('active')) {
+                        answersSection.classList.remove('active');
+                    } else {
+                        // Check if user is logged in
+                        if (!auth.currentUser) {
+                            alert('Please log in to answer questions.');
+                            return;
+                        }
+                        
+                        // Load answers for this question
+                        loadQuestionAnswers(questionId);
+                        answersSection.classList.add('active');
+                    }
+                }
+            });
+            
+            // Handle show more answers button
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.show-more-answers')) {
+                    const showMoreBtn = e.target.closest('.show-more-answers');
+                    const questionId = showMoreBtn.getAttribute('data-question');
+                    const answersContainer = document.querySelector(`#answers-${questionId} .answer-items`);
+                    
+                    if (showMoreBtn.classList.contains('expanded')) {
+                        // Collapse to show only 5 answers
+                        showMoreBtn.classList.remove('expanded');
+                        showMoreBtn.querySelector('span').textContent = 'Show More';
+                        
+                        // Hide answers beyond the first 5
+                        const allAnswers = answersContainer.querySelectorAll('.answer-item');
+                        allAnswers.forEach((answer, index) => {
+                            if (index >= 5) {
+                                answer.style.display = 'none';
+                            }
+                        });
+                    } else {
+                        // Expand to show all answers
+                        showMoreBtn.classList.add('expanded');
+                        showMoreBtn.querySelector('span').textContent = 'Show Less';
+                        
+                        // Show all answers
+                        const allAnswers = answersContainer.querySelectorAll('.answer-item');
+                        allAnswers.forEach(answer => {
+                            answer.style.display = 'block';
+                        });
+                    }
+                }
+            });
+            
+            // Handle answer submission
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('answer-submit')) {
+                    e.preventDefault();
+                    
+                    // Check if user is logged in
+                    const user = auth.currentUser;
+                    if (!user) {
+                        alert('Please log in to submit answers.');
+                        return;
+                    }
+                    
+                    const form = e.target.closest('.answer-form');
+                    const textarea = form.querySelector('.answer-textarea');
+                    const answerText = textarea.value.trim();
+                    
+                    if (!answerText) {
+                        alert('Please enter your answer before submitting.');
+                        return;
+                    }
+                    
+                    // Get question ID from the container
+                    const answersContainer = form.closest('.question-answers');
+                    const questionId = answersContainer.id.replace('answers-', '');
+                    
+                    // Submit the answer
+                    submitQuestionAnswer(questionId, answerText)
+                        .then(() => {
+                            // Clear textarea after successful submission
+                            textarea.value = '';
+                            
+                            // Reload answers to show the new one
+                            loadQuestionAnswers(questionId);
+                        })
+                        .catch(error => {
+                            console.error('Error submitting answer:', error);
+                            alert('Error submitting answer. Please try again.');
+                        });
+                }
+            });
+            
+            // Function to load answers for a question
+            async function loadQuestionAnswers(questionId) {
+                try {
+                    const answersContainer = document.getElementById('answers-' + questionId);
+                    
+                    // Get the form element (to position the answers before it)
+                    const answerForm = answersContainer.querySelector('.answer-form');
+                    
+                    // Remove existing answers container if it exists
+                    const existingAnswers = answersContainer.querySelector('.answer-items');
+                    if (existingAnswers) {
+                        existingAnswers.remove();
+                    }
+                    
+                    // Remove existing show more button if it exists
+                    const existingShowMore = answersContainer.querySelector('.show-more-answers');
+                    if (existingShowMore) {
+                        existingShowMore.remove();
+                    }
+                    
+                    // Create new answers container
+                    const answersElement = document.createElement('div');
+                    answersElement.className = 'answer-items';
+                    
+                    // Get answers from Firestore
+                    const q = query(
+                        collection(db, 'questionAnswers'),
+                        where('questionId', '==', questionId),
+                        orderBy('date', 'desc')
+                    );
+                    
+                    const querySnapshot = await getDocs(q);
+                    let answersCount = 0;
+                    
+                    querySnapshot.forEach((doc) => {
+                        answersCount++;
+                        const answerData = doc.data();
+                        
+                        // Format date
+                        const date = answerData.date.toDate ? answerData.date.toDate() : new Date(answerData.date);
+                        const formattedDate = `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
+                        
+                        // Create answer element
+                        const answerElement = document.createElement('div');
+                        answerElement.className = 'answer-item';
+                        
+                        // Hide answers beyond the first 5
+                        if (answersCount > 5) {
+                            answerElement.style.display = 'none';
+                        }
+                        
+                        // Handle author photo
+                        const authorPhoto = answerData.authorPhotoURL || '';
+                        const authorPhotoHTML = authorPhoto
+                            ? `<img src="${authorPhoto}" class="answer-photo" alt="${answerData.authorName}">`
+                            : '';
+                        
+                        answerElement.innerHTML = `
+                            <div class="answer-header">
+                                ${authorPhotoHTML}
+                                <span class="answer-author">${answerData.authorName}</span>
+                                <span class="answer-date">${formattedDate}</span>
+                            </div>
+                            <div class="answer-text">${answerData.text}</div>
+                        `;
+                        
+                        answersElement.appendChild(answerElement);
+                    });
+                    
+                    // Insert answers before the form
+                    answersContainer.insertBefore(answersElement, answerForm);
+                    
+                    // Add 'Show More' button if there are more than 5 answers
+                    if (answersCount > 5) {
+                        const showMoreBtn = document.createElement('button');
+                        showMoreBtn.className = 'show-more-answers';
+                        showMoreBtn.setAttribute('data-question', questionId);
+                        showMoreBtn.innerHTML = `
+                            <span>Show More</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        `;
+                        
+                        // Insert show more button after the answers
+                        answersContainer.insertBefore(showMoreBtn, answerForm);
+                    }
+                    
+                    // Show "No answers yet" message if there are no answers
+                    if (answersCount === 0) {
+                        const noAnswersMsg = document.createElement('p');
+                        noAnswersMsg.className = 'no-answers-msg';
+                        noAnswersMsg.textContent = 'No answers yet. Be the first to share your thoughts!';
+                        answersContainer.insertBefore(noAnswersMsg, answerForm);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error loading answers:', error);
+                }
+            }
+            
+            // Function to submit an answer to a question
+            async function submitQuestionAnswer(questionId, text) {
+                const user = auth.currentUser;
+                if (!user) return Promise.reject('User not logged in');
+                
+                // Get user's first name
+                let authorName = user.displayName || user.email || 'Anonymous User';
+                // Extract first name if full name is available
+                if (authorName.includes(' ')) {
+                    authorName = authorName.split(' ')[0];
+                }
+                
+                // Create answer object
+                const answer = {
+                    questionId: questionId,
+                    authorUid: user.uid,
+                    authorName: authorName,
+                    authorPhotoURL: user.photoURL || '',
+                    text: text,
+                    date: new Date()
+                };
+                
+                // Save to Firestore
+                return addDoc(collection(db, 'questionAnswers'), answer);
+            }
             
             // Check for hash in URL on page load
             function checkHash() {

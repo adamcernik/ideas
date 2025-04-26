@@ -824,50 +824,8 @@
         
         .question-answers {
             margin-top: 0.75rem;
-            margin-left: 1.5rem;
-            padding-left: 1rem;
             border-left: 2px solid #eee;
-            display: none;
-        }
-        
-        .question-answers.active {
-            display: block;
-        }
-        
-        .answer-form {
-            margin-bottom: 1rem;
-        }
-        
-        .answer-textarea {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            resize: vertical;
-            min-height: 60px;
-            font-family: inherit;
-            font-size: 0.9rem;
-        }
-        
-        .answer-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
-        }
-        
-        .answer-submit {
-            margin-top: 0.5rem;
-            padding: 0.3rem 0.7rem;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        
-        .answer-submit:hover {
-            background-color: var(--secondary);
+            padding-left: 1rem;
         }
         
         .answer-item {
@@ -940,6 +898,96 @@
         .show-more-answers.expanded svg {
             transform: rotate(180deg);
         }
+        
+        /* Answer Modal */
+        .answer-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+        
+        .answer-modal.active {
+            display: flex;
+        }
+        
+        .answer-modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .answer-modal-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: transparent;
+            border: none;
+            font-size: 1.25rem;
+            line-height: 1;
+            cursor: pointer;
+            color: #6c757d;
+        }
+        
+        .answer-modal-close:hover {
+            color: var(--dark);
+        }
+        
+        .answer-modal-title {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            padding-right: 1.5rem;
+        }
+        
+        .answer-modal-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .answer-modal-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        
+        .answer-modal-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+        
+        .answer-modal-submit {
+            align-self: flex-end;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .answer-modal-submit:hover {
+            background-color: var(--secondary);
+        }
     </style>
 </head>
 <body>
@@ -1005,10 +1053,6 @@
                             <button class="answer-btn" data-question="personal1">Answer</button>
                             <div class="question-answers" id="answers-personal1">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                         <li>
@@ -1016,10 +1060,6 @@
                             <button class="answer-btn" data-question="personal2">Answer</button>
                             <div class="question-answers" id="answers-personal2">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                         <li>
@@ -1027,10 +1067,6 @@
                             <button class="answer-btn" data-question="personal3">Answer</button>
                             <div class="question-answers" id="answers-personal3">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                         <li>
@@ -1038,10 +1074,6 @@
                             <button class="answer-btn" data-question="personal4">Answer</button>
                             <div class="question-answers" id="answers-personal4">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                     </ul>
@@ -1055,10 +1087,6 @@
                             <button class="answer-btn" data-question="market1">Answer</button>
                             <div class="question-answers" id="answers-market1">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                         <li>
@@ -1066,10 +1094,6 @@
                             <button class="answer-btn" data-question="market2">Answer</button>
                             <div class="question-answers" id="answers-market2">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                         <li>
@@ -1077,10 +1101,6 @@
                             <button class="answer-btn" data-question="market3">Answer</button>
                             <div class="question-answers" id="answers-market3">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                         <li>
@@ -1088,10 +1108,6 @@
                             <button class="answer-btn" data-question="market4">Answer</button>
                             <div class="question-answers" id="answers-market4">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                     </ul>
@@ -1105,10 +1121,6 @@
                             <button class="answer-btn" data-question="execution1">Answer</button>
                             <div class="question-answers" id="answers-execution1">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                         <li>
@@ -1116,10 +1128,6 @@
                             <button class="answer-btn" data-question="execution2">Answer</button>
                             <div class="question-answers" id="answers-execution2">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                         <li>
@@ -1127,10 +1135,6 @@
                             <button class="answer-btn" data-question="execution3">Answer</button>
                             <div class="question-answers" id="answers-execution3">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                         <li>
@@ -1138,10 +1142,6 @@
                             <button class="answer-btn" data-question="execution4">Answer</button>
                             <div class="question-answers" id="answers-execution4">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                     </ul>
@@ -1155,10 +1155,6 @@
                             <button class="answer-btn" data-question="diff1">Answer</button>
                             <div class="question-answers" id="answers-diff1">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                         <li>
@@ -1166,10 +1162,6 @@
                             <button class="answer-btn" data-question="diff2">Answer</button>
                             <div class="question-answers" id="answers-diff2">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                         <li>
@@ -1177,10 +1169,6 @@
                             <button class="answer-btn" data-question="diff3">Answer</button>
                             <div class="question-answers" id="answers-diff3">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                         <li>
@@ -1188,10 +1176,6 @@
                             <button class="answer-btn" data-question="diff4">Answer</button>
                             <div class="question-answers" id="answers-diff4">
                                 <!-- Answers will be loaded here -->
-                                <div class="answer-form">
-                                    <textarea class="answer-textarea" placeholder="Share your thoughts..."></textarea>
-                                    <button class="answer-submit">Submit</button>
-                                </div>
                             </div>
                         </li>
                     </ul>
@@ -1261,6 +1245,18 @@
                 </div>
                 
                 <button type="submit" class="submit-btn">Submit Idea</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Answer Modal -->
+    <div id="answer-modal" class="answer-modal">
+        <div class="answer-modal-content">
+            <button id="answer-modal-close" class="answer-modal-close">&times;</button>
+            <h3 class="answer-modal-title" id="answer-modal-question-text">Question text will appear here</h3>
+            <form id="answer-modal-form" class="answer-modal-form">
+                <textarea id="answer-modal-textarea" class="answer-modal-textarea" placeholder="Share your thoughts..." required></textarea>
+                <button type="submit" class="answer-modal-submit">Submit Answer</button>
             </form>
         </div>
     </div>
@@ -1594,22 +1590,50 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
             document.addEventListener('click', function(e) {
                 if (e.target.classList.contains('answer-btn')) {
                     const questionId = e.target.getAttribute('data-question');
-                    const answersSection = document.getElementById('answers-' + questionId);
+                    const questionText = e.target.parentElement.textContent.trim().split('Answer')[0].trim();
                     
-                    // Toggle answers section visibility
-                    if (answersSection.classList.contains('active')) {
-                        answersSection.classList.remove('active');
-                    } else {
-                        // Check if user is logged in
-                        if (!auth.currentUser) {
-                            alert('Please log in to answer questions.');
-                            return;
-                        }
-                        
-                        // Load answers for this question
-                        loadQuestionAnswers(questionId);
-                        answersSection.classList.add('active');
+                    // Check if user is logged in
+                    if (!auth.currentUser) {
+                        alert('Please log in to answer questions.');
+                        return;
                     }
+                    
+                    // Open answer modal
+                    const answerModal = document.getElementById('answer-modal');
+                    const modalQuestionText = document.getElementById('answer-modal-question-text');
+                    const modalForm = document.getElementById('answer-modal-form');
+                    const modalTextarea = document.getElementById('answer-modal-textarea');
+                    
+                    // Set question text and clear previous answers
+                    modalQuestionText.textContent = questionText;
+                    modalTextarea.value = '';
+                    
+                    // Store question ID as data attribute on form
+                    modalForm.setAttribute('data-question-id', questionId);
+                    
+                    // Show modal
+                    answerModal.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                    
+                    // Focus on textarea
+                    modalTextarea.focus();
+                    
+                    // Load answers for display under the question
+                    loadQuestionAnswers(questionId);
+                }
+            });
+            
+            // Handle modal close button
+            document.getElementById('answer-modal-close').addEventListener('click', function() {
+                document.getElementById('answer-modal').classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+            });
+            
+            // Close modal if clicking outside content
+            document.getElementById('answer-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = ''; // Restore scrolling
                 }
             });
             
@@ -1646,45 +1670,42 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                 }
             });
             
-            // Handle answer submission
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('answer-submit')) {
-                    e.preventDefault();
-                    
-                    // Check if user is logged in
-                    const user = auth.currentUser;
-                    if (!user) {
-                        alert('Please log in to submit answers.');
-                        return;
-                    }
-                    
-                    const form = e.target.closest('.answer-form');
-                    const textarea = form.querySelector('.answer-textarea');
-                    const answerText = textarea.value.trim();
-                    
-                    if (!answerText) {
-                        alert('Please enter your answer before submitting.');
-                        return;
-                    }
-                    
-                    // Get question ID from the container
-                    const answersContainer = form.closest('.question-answers');
-                    const questionId = answersContainer.id.replace('answers-', '');
-                    
-                    // Submit the answer
-                    submitQuestionAnswer(questionId, answerText)
-                        .then(() => {
-                            // Clear textarea after successful submission
-                            textarea.value = '';
-                            
-                            // Reload answers to show the new one
-                            loadQuestionAnswers(questionId);
-                        })
-                        .catch(error => {
-                            console.error('Error submitting answer:', error);
-                            alert('Error submitting answer. Please try again.');
-                        });
+            // Handle answer submission from modal
+            document.getElementById('answer-modal-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Check if user is logged in
+                const user = auth.currentUser;
+                if (!user) {
+                    alert('Please log in to submit answers.');
+                    return;
                 }
+                
+                const textarea = document.getElementById('answer-modal-textarea');
+                const answerText = textarea.value.trim();
+                
+                if (!answerText) {
+                    alert('Please enter your answer before submitting.');
+                    return;
+                }
+                
+                // Get question ID from the form
+                const questionId = this.getAttribute('data-question-id');
+                
+                // Submit the answer
+                submitQuestionAnswer(questionId, answerText)
+                    .then(() => {
+                        // Close the modal
+                        document.getElementById('answer-modal').classList.remove('active');
+                        document.body.style.overflow = ''; // Restore scrolling
+                        
+                        // Reload answers to show the new one
+                        loadQuestionAnswers(questionId);
+                    })
+                    .catch(error => {
+                        console.error('Error submitting answer:', error);
+                        alert('Error submitting answer. Please try again.');
+                    });
             });
             
             // Function to load answers for a question
@@ -1692,24 +1713,13 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                 try {
                     const answersContainer = document.getElementById('answers-' + questionId);
                     
-                    // Get the form element (to position the answers before it)
-                    const answerForm = answersContainer.querySelector('.answer-form');
-                    
-                    // Remove existing answers container if it exists
-                    const existingAnswers = answersContainer.querySelector('.answer-items');
-                    if (existingAnswers) {
-                        existingAnswers.remove();
-                    }
-                    
-                    // Remove existing show more button if it exists
-                    const existingShowMore = answersContainer.querySelector('.show-more-answers');
-                    if (existingShowMore) {
-                        existingShowMore.remove();
-                    }
+                    // Clear previous content
+                    answersContainer.innerHTML = '';
                     
                     // Create new answers container
                     const answersElement = document.createElement('div');
                     answersElement.className = 'answer-items';
+                    answersContainer.appendChild(answersElement);
                     
                     // Get answers from Firestore
                     const q = query(
@@ -1756,9 +1766,6 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                         answersElement.appendChild(answerElement);
                     });
                     
-                    // Insert answers before the form
-                    answersContainer.insertBefore(answersElement, answerForm);
-                    
                     // Add 'Show More' button if there are more than 5 answers
                     if (answersCount > 5) {
                         const showMoreBtn = document.createElement('button');
@@ -1771,8 +1778,8 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                             </svg>
                         `;
                         
-                        // Insert show more button after the answers
-                        answersContainer.insertBefore(showMoreBtn, answerForm);
+                        // Add show more button after the answers
+                        answersContainer.appendChild(showMoreBtn);
                     }
                     
                     // Show "No answers yet" message if there are no answers
@@ -1780,7 +1787,7 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                         const noAnswersMsg = document.createElement('p');
                         noAnswersMsg.className = 'no-answers-msg';
                         noAnswersMsg.textContent = 'No answers yet. Be the first to share your thoughts!';
-                        answersContainer.insertBefore(noAnswersMsg, answerForm);
+                        answersContainer.appendChild(noAnswersMsg);
                     }
                     
                 } catch (error) {

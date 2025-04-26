@@ -676,6 +676,12 @@
         font-size: 0.875rem;
         display: flex;
         align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .autosave-status.visible {
+        opacity: 1;
     }
 </style>
 </head>
@@ -930,45 +936,107 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                 }
             });
             
-            // Write section autosave functionality
+            // Write section Firebase saving functionality
             let autosaveTimeout;
-            const AUTOSAVE_DELAY = 2000; // 2 seconds
+            const AUTOSAVE_DELAY = 1500; // 1.5 seconds
             
-            // Load saved content from localStorage if available
-            const savedWriteContent = localStorage.getItem('writeContent');
-            if (savedWriteContent) {
-                writeTextarea.value = savedWriteContent;
+            // Function to load write content from Firebase
+            async function loadWriteContent() {
+                const user = auth.currentUser;
+                if (!user) return;
+                
+                try {
+                    const writeDocRef = doc(db, 'userContent', user.uid);
+                    const writeDocSnap = await getDoc(writeDocRef);
+                    
+                    if (writeDocSnap.exists() && writeDocSnap.data().writeContent) {
+                        writeTextarea.value = writeDocSnap.data().writeContent;
+                    }
+                } catch (error) {
+                    console.error("Error loading write content:", error);
+                }
+            }
+            
+            // Function to save write content to Firebase
+            async function saveWriteContent(content) {
+                const user = auth.currentUser;
+                if (!user) return;
+                
+                try {
+                    autosaveStatus.textContent = 'Saving...';
+                    autosaveStatus.classList.add('visible');
+                    
+                    const writeDocRef = doc(db, 'userContent', user.uid);
+                    await setDoc(writeDocRef, {
+                        writeContent: content,
+                        lastUpdated: new Date()
+                    }, { merge: true });
+                    
+                    autosaveStatus.textContent = 'Saved';
+                    
+                    // Hide status after 2 seconds
+                    setTimeout(() => {
+                        autosaveStatus.classList.remove('visible');
+                    }, 2000);
+                } catch (error) {
+                    console.error("Error saving write content:", error);
+                    autosaveStatus.textContent = 'Error saving';
+                    
+                    // Hide status after 3 seconds
+                    setTimeout(() => {
+                        autosaveStatus.classList.remove('visible');
+                    }, 3000);
+                }
             }
             
             // Setup autosave for write section
             writeTextarea.addEventListener('input', function() {
                 // Clear previous timeout
                 clearTimeout(autosaveTimeout);
+                
+                // Show saving status
                 autosaveStatus.textContent = 'Saving...';
+                autosaveStatus.classList.add('visible');
                 
                 // Set new timeout
                 autosaveTimeout = setTimeout(function() {
-                    localStorage.setItem('writeContent', writeTextarea.value);
-                    autosaveStatus.textContent = 'Saved';
-                    
-                    // Reset status after 2 seconds
-                    setTimeout(function() {
-                        autosaveStatus.textContent = 'Autosaving...';
-                    }, 2000);
+                    saveWriteContent(writeTextarea.value);
                 }, AUTOSAVE_DELAY);
             });
             
             // Clear button for write section
-            clearWriteBtn.addEventListener('click', function() {
+            clearWriteBtn.addEventListener('click', async function() {
                 if (confirm('Are you sure you want to clear all content?')) {
                     writeTextarea.value = '';
-                    localStorage.removeItem('writeContent');
-                    autosaveStatus.textContent = 'Cleared';
                     
-                    // Reset status after 2 seconds
-                    setTimeout(function() {
-                        autosaveStatus.textContent = 'Autosaving...';
-                    }, 2000);
+                    const user = auth.currentUser;
+                    if (user) {
+                        try {
+                            autosaveStatus.textContent = 'Clearing...';
+                            autosaveStatus.classList.add('visible');
+                            
+                            const writeDocRef = doc(db, 'userContent', user.uid);
+                            await updateDoc(writeDocRef, {
+                                writeContent: '',
+                                lastUpdated: new Date()
+                            });
+                            
+                            autosaveStatus.textContent = 'Cleared';
+                            
+                            // Hide status after 2 seconds
+                            setTimeout(() => {
+                                autosaveStatus.classList.remove('visible');
+                            }, 2000);
+                        } catch (error) {
+                            console.error("Error clearing write content:", error);
+                            autosaveStatus.textContent = 'Error clearing';
+                            
+                            // Hide status after 3 seconds
+                            setTimeout(() => {
+                                autosaveStatus.classList.remove('visible');
+                            }, 3000);
+                        }
+                    }
                 }
             });
             
@@ -1050,6 +1118,9 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                     
                     // Load ideas from Firestore
                     loadIdeas();
+                    
+                    // Load write content
+                    loadWriteContent();
                 } else {
                     // User is signed out
                     loginBtn.style.display = 'inline-block';
@@ -1071,6 +1142,9 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                     
                     // Clear ideas when logged out
                     ideasContainer.innerHTML = '';
+                    
+                    // Clear write textarea
+                    writeTextarea.value = '';
                 }
             });
             

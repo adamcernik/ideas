@@ -135,11 +135,28 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
         
         .idea-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .idea-card::after {
+            content: "→";
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.25rem;
+            color: var(--primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .idea-card:hover::after {
+            opacity: 1;
         }
         
         .idea-header {
@@ -166,6 +183,13 @@
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: var(--dark);
+            position: relative;
+            padding-right: 1.5rem;
+        }
+        
+        .idea-title:hover {
+            color: var(--primary);
+            text-decoration: underline;
         }
         
         .idea-description {
@@ -1295,9 +1319,9 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
             
             // Make idea cards clickable to view details
             document.addEventListener('click', function(e) {
-                const ideaTitle = e.target.closest('.idea-title');
-                if (ideaTitle) {
-                    const ideaCard = ideaTitle.closest('.idea-card');
+                const ideaCard = e.target.closest('.idea-card');
+                // Check if we clicked on an idea card but not on a button inside it
+                if (ideaCard && !e.target.closest('.btn') && !e.target.closest('.tag')) {
                     const ideaId = ideaCard.getAttribute('data-id');
                     loadIdeaDetail(ideaId);
                 }
@@ -1701,6 +1725,7 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
             ideaCard.setAttribute('data-id', id);
             ideaCard.setAttribute('data-tags', idea.tags.join(' '));
             ideaCard.setAttribute('data-author-uid', idea.authorUid || 'unknown');
+            ideaCard.setAttribute('title', 'Click to see details and brainstorm this idea');
             
             // Format date
             const date = idea.date.toDate ? idea.date.toDate() : new Date(idea.date);
@@ -1735,7 +1760,7 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                     </div>
                     <span class="idea-date">${formattedDate}</span>
                 </div>
-                <h3 class="idea-title">${idea.title}</h3>
+                <h3 class="idea-title" title="Click to view details">${idea.title}</h3>
                 <p class="idea-description">${idea.description}</p>
                 <div class="idea-footer">
                     <div class="tags">

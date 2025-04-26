@@ -32,13 +32,6 @@ const Navbar = () => {
               Questions
             </Link>
           </li>
-          {currentUser && (
-            <li className="nav-item">
-              <Link to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
-                Dashboard
-              </Link>
-            </li>
-          )}
         </ul>
         <div className="navbar-profile">
           <ProfileIcon />

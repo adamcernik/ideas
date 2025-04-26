@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../firebase';
 import { collection, query, where, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -12,6 +13,7 @@ const Dashboard = () => {
   const [description, setDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchIdeas = async () => {
@@ -86,7 +88,12 @@ const Dashboard = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, e) => {
+    // Stop event propagation to prevent navigation when clicking delete
+    if (e) {
+      e.stopPropagation();
+    }
+    
     if (window.confirm('Are you sure you want to delete this idea?')) {
       try {
         await deleteDoc(doc(db, 'ideas', id));
@@ -95,6 +102,10 @@ const Dashboard = () => {
         console.error('Error deleting idea:', error);
       }
     }
+  };
+
+  const handleIdeaClick = (id) => {
+    navigate(`/idea/${id}`);
   };
 
   return (
@@ -116,12 +127,16 @@ const Dashboard = () => {
             </div>
           ) : (
             ideas.map((idea) => (
-              <div className="idea-card" key={idea.id}>
+              <div 
+                className="idea-card" 
+                key={idea.id} 
+                onClick={() => handleIdeaClick(idea.id)}
+              >
                 <div className="idea-header">
                   <h3>{idea.title}</h3>
                   <button 
                     className="btn-delete"
-                    onClick={() => handleDelete(idea.id)}
+                    onClick={(e) => handleDelete(idea.id, e)}
                   >
                     Delete
                   </button>

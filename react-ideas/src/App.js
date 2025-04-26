@@ -7,7 +7,6 @@ import Navbar from './components/Navbar/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
 import Questions from './pages/Questions';
 import IdeaDetail from './pages/IdeaDetail';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -22,14 +21,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/questions" element={<Questions />} />
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
           <Route 
             path="/idea/:id" 
             element={

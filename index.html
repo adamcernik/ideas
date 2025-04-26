@@ -38,6 +38,84 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
+        /* Navigation Menu */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-menu li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-menu li a:hover,
+        .nav-menu li a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Mobile menu button */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Page sections */
+        .page-section {
+            display: none;
+        }
+        
+        .page-section.active {
+            display: block;
+        }
+        
+        /* Motivation page styles */
+        .motivation-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .question-category {
+            margin-bottom: 2rem;
+        }
+        
+        .question-category h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .question-list {
+            list-style: none;
+        }
+        
+        .question-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question-list li:last-child {
+            border-bottom: none;
+        }
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -331,6 +409,46 @@
             .search-input {
                 flex-grow: 1;
             }
+            
+            /* Responsive navigation */
+            .nav-container {
+                position: relative;
+            }
+            
+            .menu-toggle {
+                display: block;
+                position: absolute;
+                right: 1rem;
+                top: -3rem;
+            }
+            
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--secondary);
+                padding: 1rem;
+                gap: 0.5rem;
+                z-index: 100;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }
+            
+            .nav-menu.show {
+                display: flex;
+            }
+            
+            .nav-menu li {
+                width: 100%;
+            }
+            
+            .nav-menu li a {
+                display: block;
+                padding: 0.75rem;
+                text-align: center;
+            }
         }
     /* Delete confirmation modal styles */
     .modal {
@@ -430,6 +548,18 @@
     <header>
         <h1>Idea Exchange Platform</h1>
         <p>Share and collaborate on business ideas between UX Designer and Product Manager</p>
+        <div class="nav-container">
+            <button class="menu-toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                </svg>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="#ideas" class="active" data-section="ideas-section">Ideas</a></li>
+                <li><a href="#motivation" data-section="motivation-section">Motivation</a></li>
+                <li><a href="#write" data-section="write-section">Write</a></li>
+            </ul>
+        </div>
         <div class="auth-buttons">
             <button id="login-btn" class="btn" title="Sign in">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
@@ -446,64 +576,155 @@
     </header>
     
     <div class="container">
-        <div class="form-container" id="idea-form-container" style="display: none;">
-            <h2 class="form-title">Submit New Idea</h2>
-            <form id="idea-form">
-                <!-- Author select removed - will use current user -->
-                
-                <div class="form-group">
-                    <label for="title">Idea Title</label>
-                    <input type="text" id="title" name="title" placeholder="Short and descriptive title" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="4" placeholder="Describe your idea in detail..." required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Tags</label>
-                    <div class="tag-selector">
-                        <input type="checkbox" id="tag-tech" class="tag-checkbox" name="tags" value="tech">
-                        <label for="tag-tech" class="tag-label tech">Tech</label>
-                        
-                        <input type="checkbox" id="tag-sport" class="tag-checkbox" name="tags" value="sport">
-                        <label for="tag-sport" class="tag-label sport">Sport</label>
-                        
-                        <input type="checkbox" id="tag-ux" class="tag-checkbox" name="tags" value="ux">
-                        <label for="tag-ux" class="tag-label ux">UX/UI</label>
-                        
-                        <input type="checkbox" id="tag-saas" class="tag-checkbox" name="tags" value="saas">
-                        <label for="tag-saas" class="tag-label">SaaS</label>
-                        
-                        <input type="checkbox" id="tag-app" class="tag-checkbox" name="tags" value="app">
-                        <label for="tag-app" class="tag-label">Mobile App</label>
+        <!-- Ideas Section -->
+        <div id="ideas-section" class="page-section active">
+            <div class="form-container" id="idea-form-container" style="display: none;">
+                <h2 class="form-title">Submit New Idea</h2>
+                <form id="idea-form">
+                    <!-- Author select removed - will use current user -->
+                    
+                    <div class="form-group">
+                        <label for="title">Idea Title</label>
+                        <input type="text" id="title" name="title" placeholder="Short and descriptive title" required>
                     </div>
-                </div>
-                
-                <button type="submit" class="submit-btn">Submit Idea</button>
-            </form>
-        </div>
-        
-        <div class="controls" id="ideas-controls" style="display: none;">
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All Ideas</button>
-                <button class="filter-btn" data-filter="tech">Tech</button>
-                <button class="filter-btn" data-filter="sport">Sport</button>
-                <button class="filter-btn" data-filter="ux">UX/UI</button>
+                    
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="4" placeholder="Describe your idea in detail..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tags</label>
+                        <div class="tag-selector">
+                            <input type="checkbox" id="tag-tech" class="tag-checkbox" name="tags" value="tech">
+                            <label for="tag-tech" class="tag-label tech">Tech</label>
+                            
+                            <input type="checkbox" id="tag-sport" class="tag-checkbox" name="tags" value="sport">
+                            <label for="tag-sport" class="tag-label sport">Sport</label>
+                            
+                            <input type="checkbox" id="tag-ux" class="tag-checkbox" name="tags" value="ux">
+                            <label for="tag-ux" class="tag-label ux">UX/UI</label>
+                            
+                            <input type="checkbox" id="tag-saas" class="tag-checkbox" name="tags" value="saas">
+                            <label for="tag-saas" class="tag-label">SaaS</label>
+                            
+                            <input type="checkbox" id="tag-app" class="tag-checkbox" name="tags" value="app">
+                            <label for="tag-app" class="tag-label">Mobile App</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Submit Idea</button>
+                </form>
             </div>
             
-            <div class="search-box">
-                <input type="text" class="search-input" placeholder="Search ideas...">
-                <button class="search-btn">Search</button>
+            <div class="controls" id="ideas-controls" style="display: none;">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Ideas</button>
+                    <button class="filter-btn" data-filter="tech">Tech</button>
+                    <button class="filter-btn" data-filter="sport">Sport</button>
+                    <button class="filter-btn" data-filter="ux">UX/UI</button>
+                </div>
+                
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search ideas...">
+                    <button class="search-btn">Search</button>
+                </div>
+            </div>
+            
+            <div id="login-message" style="text-align: center; margin-top: 2rem;">
+                <h2>Please log in to view and share ideas</h2>
+            </div>
+            
+            <div class="ideas-container" style="display: none;"></div>
+        </div>
+
+        <!-- Motivation Section -->
+        <div id="motivation-section" class="page-section">
+            <div class="motivation-container">
+                <h2>Finding Viable Ideas</h2>
+                <p>Use these questions to guide your ideation process and evaluate potential business opportunities.</p>
+                
+                <div class="question-category">
+                    <h3>Personal Alignment Questions</h3>
+                    <ul class="question-list">
+                        <li>What problems do I genuinely care about solving?</li>
+                        <li>What unique skills, experiences, or insights do I have that others don't?</li>
+                        <li>What could I work on for years without losing interest?</li>
+                        <li>What areas do I have unfair advantages in (connections, expertise, resources)?</li>
+                    </ul>
+                </div>
+                
+                <div class="question-category">
+                    <h3>Market Reality Questions</h3>
+                    <ul class="question-list">
+                        <li>What pain points exist that people or businesses would pay to solve?</li>
+                        <li>Where are people currently spending money but unhappy with solutions?</li>
+                        <li>What inefficient processes or systems could be dramatically improved?</li>
+                        <li>What emerging trends or technologies create new opportunities?</li>
+                    </ul>
+                </div>
+                
+                <div class="question-category">
+                    <h3>Execution Questions</h3>
+                    <ul class="question-list">
+                        <li>Can I build a minimum viable product (MVP) relatively quickly?</li>
+                        <li>Do I have access to early users who can provide feedback?</li>
+                        <li>What would sustainable unit economics look like?</li>
+                        <li>How could this idea scale?</li>
+                    </ul>
+                </div>
+                
+                <div class="question-category">
+                    <h3>Differentiation Questions</h3>
+                    <ul class="question-list">
+                        <li>Why hasn't this been solved effectively already?</li>
+                        <li>What's my unique insight about this market or problem?</li>
+                        <li>How defensible would this solution be against competitors?</li>
+                        <li>What would make customers choose this over alternatives?</li>
+                    </ul>
+                </div>
             </div>
         </div>
-        
-        <div id="login-message" style="text-align: center; margin-top: 2rem;">
-            <h2>Please log in to view and share ideas</h2>
+
+        <!-- Write Section - this will be the existing form in its own section -->
+        <div id="write-section" class="page-section">
+            <div class="form-container">
+                <h2 class="form-title">Write New Idea</h2>
+                <form id="write-form">
+                    <div class="form-group">
+                        <label for="write-title">Idea Title</label>
+                        <input type="text" id="write-title" name="write-title" placeholder="Short and descriptive title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="write-description">Description</label>
+                        <textarea id="write-description" name="write-description" rows="8" placeholder="Describe your idea in detail..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tags</label>
+                        <div class="tag-selector">
+                            <input type="checkbox" id="write-tag-tech" class="tag-checkbox" name="write-tags" value="tech">
+                            <label for="write-tag-tech" class="tag-label tech">Tech</label>
+                            
+                            <input type="checkbox" id="write-tag-sport" class="tag-checkbox" name="write-tags" value="sport">
+                            <label for="write-tag-sport" class="tag-label sport">Sport</label>
+                            
+                            <input type="checkbox" id="write-tag-ux" class="tag-checkbox" name="write-tags" value="ux">
+                            <label for="write-tag-ux" class="tag-label ux">UX/UI</label>
+                            
+                            <input type="checkbox" id="write-tag-saas" class="tag-checkbox" name="write-tags" value="saas">
+                            <label for="write-tag-saas" class="tag-label">SaaS</label>
+                            
+                            <input type="checkbox" id="write-tag-app" class="tag-checkbox" name="write-tags" value="app">
+                            <label for="write-tag-app" class="tag-label">Mobile App</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Publish Idea</button>
+                </form>
+            </div>
         </div>
-        
-        <div class="ideas-container" style="display: none;"></div>
     </div>
 
     <!-- Delete Confirmation Modal -->
@@ -550,6 +771,55 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
             const ideaFormContainer = document.getElementById('idea-form-container');
             const ideasControls = document.getElementById('ideas-controls');
             const loginMessage = document.getElementById('login-message');
+            
+            // Navigation elements
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            const pageSections = document.querySelectorAll('.page-section');
+            
+            // Menu toggle for mobile
+            menuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('show');
+            });
+            
+            // Navigation between sections
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active link
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show active section
+                    const targetSection = this.getAttribute('data-section');
+                    pageSections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.getElementById(targetSection).classList.add('active');
+                    
+                    // Hide mobile menu after selection
+                    navMenu.classList.remove('show');
+                    
+                    // Update URL hash
+                    window.location.hash = this.getAttribute('href');
+                });
+            });
+            
+            // Check for hash in URL on page load
+            function checkHash() {
+                const hash = window.location.hash;
+                if (hash) {
+                    const targetLink = document.querySelector(`.nav-menu a[href="${hash}"]`);
+                    if (targetLink) {
+                        targetLink.click();
+                    }
+                }
+            }
+            
+            // Check hash on load
+            checkHash();
             
             // Initialize Authentication UI
             const loginBtn = document.getElementById('login-btn');
@@ -887,6 +1157,66 @@ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, setDoc, array
                 deleteModal.style.display = 'none';
                 selectedDeleteIdeaId = null;
                 selectedDeleteCardElement = null;
+            });
+
+            // Set up write form to have the same functionality as the main form
+            const writeForm = document.getElementById('write-form');
+            
+            writeForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Check if user is logged in
+                const user = auth.currentUser;
+                if (!user) {
+                    alert('Please log in to submit an idea.');
+                    return;
+                }
+                
+                const title = document.getElementById('write-title').value;
+                const description = document.getElementById('write-description').value;
+
+                // Get selected tags
+                const tags = [];
+                document.querySelectorAll('input[name="write-tags"]:checked').forEach(tag => {
+                    tags.push(tag.value);
+                });
+
+                // Get user's first name
+                let authorName = user.displayName || user.email || 'Anonymous User';
+                // Extract first name if full name is available
+                if (authorName.includes(' ')) {
+                    authorName = authorName.split(' ')[0];
+                }
+
+                // Create idea object
+                const idea = {
+                    authorUid: user.uid,
+                    authorName: authorName,
+                    authorPhotoURL: user.photoURL || '',
+                    title: title,
+                    description: description,
+                    tags: tags,
+                    likes: 0,
+                    date: new Date(),
+                    comments: []
+                };
+                
+                // Save to Firestore
+                addDoc(collection(db, 'ideas'), idea)
+                    .then(docRef => {
+                        // Create new idea card with the document ID
+                        createIdeaCard(docRef.id, idea);
+                        
+                        // Reset form
+                        writeForm.reset();
+                        
+                        // Navigate to ideas section to see the new idea
+                        document.querySelector('.nav-menu a[href="#ideas"]').click();
+                    })
+                    .catch(error => {
+                        console.error("Error adding document: ", error);
+                        alert("Error adding idea: " + error.message);
+                    });
             });
 
         });
